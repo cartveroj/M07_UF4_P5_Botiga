@@ -75,10 +75,15 @@ WSGI_APPLICATION = 'botiga_grupG.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'BOTIGA_DB',
+        'USER': 'gemma',
+        'PASSWORD': 'system',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+
 
 
 # Password validation
