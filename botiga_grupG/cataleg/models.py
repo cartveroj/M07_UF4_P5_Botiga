@@ -22,3 +22,6 @@ class Producte (models.Model):
     tipus = models.CharField(max_length=50,choices=TIPUS)
 
 #Ara creem el model de Catàleg
+
+class Cataleg (models.Model):
+    id_producte = models.ForeignKey(Producte,on_delete=models.CASCADE)
