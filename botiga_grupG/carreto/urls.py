@@ -5,6 +5,5 @@ urlpatterns = [
     #rutas de los endpoints
     path('', views.hello_world, name='hello'),
     path('addCarreto', views.add_carreto, name='addCarreto'),
-
-    path('proba/', views.ver_carreto)
+    path('readCarreto/', views.read_carreto, name='readCarreto')
 ]

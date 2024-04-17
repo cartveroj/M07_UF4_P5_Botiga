@@ -12,7 +12,7 @@ def hello_world(request):
 
 
 @api_view(['GET'])
-def ver_carreto(request):
+def read_carreto(request):
     queryset = Carreto.objects.all()
     serializer = CarretoSerializer(queryset, many=True)
     return Response(serializer.data)
