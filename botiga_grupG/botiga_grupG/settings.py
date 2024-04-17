@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cataleg.apps.CatalegConfig'
 ]
 
 MIDDLEWARE = [
@@ -76,7 +77,7 @@ WSGI_APPLICATION = 'botiga_grupG.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'BOTIGA_DB',
+        'NAME': 'ITIC_DB',
         'USER': 'gemma',
         'PASSWORD': 'system',
         'HOST': 'localhost',

@@ -3,12 +3,12 @@ from django.db import models
 # Create your models here.
 
 #Primer creem el model Producte ja que Cataleg necessitara la fk
-class Producte (models.Model):
+class Productos (models.Model):
 
     TIPUS = [
-        ('C','Carns'),
+        ('C','Carnics'),
         ('L','Làctics'),
-        ('P','Peix'),
+        ('P','Peixos'),
         ('V','Verdures'),
         ('H','Hortalises'),
         ('F','Fruita'),
@@ -24,4 +24,4 @@ class Producte (models.Model):
 #Ara creem el model de Catàleg
 
 class Cataleg (models.Model):
-    id_producte = models.ForeignKey(Producte,on_delete=models.CASCADE)
+    producte = models.ForeignKey(Productos, on_delete=models.CASCADE)
