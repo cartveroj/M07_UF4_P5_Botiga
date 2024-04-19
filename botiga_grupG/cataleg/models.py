@@ -19,7 +19,7 @@ class Productes (models.Model):
     origen = models.CharField(max_length=50)
     pes_kg = models.DecimalField(max_digits=5,decimal_places=2)
     stock = models.IntegerField()
-    tipus = models.CharField(max_length=50,choices=TIPUS)
+    tipus_producte = models.CharField(max_length=50,choices=TIPUS)
 
 #Ara creem el model de Catàleg
 

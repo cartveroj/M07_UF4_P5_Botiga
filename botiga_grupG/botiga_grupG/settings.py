@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'carreto.apps.CarretoConfig',
     'cataleg.apps.CatalegConfig'
+    'cataleg.apps.CatalegConfig',
+    'pagaments.apps.PagamentsConfig'
 ]
 
 MIDDLEWARE = [
