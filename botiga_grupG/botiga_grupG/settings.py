@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'cataleg.apps.CatalegConfig'
+    'cataleg.apps.CatalegConfig',
+    'pagaments.apps.PagamentsConfig'
 ]
 
 MIDDLEWARE = [
