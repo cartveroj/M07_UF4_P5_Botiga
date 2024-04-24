@@ -2,14 +2,14 @@ from django.shortcuts import render
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Productes
+from .models import Productes, Cataleg
 from rest_framework import serializers
-from .serializers import ProductesSerializer
+from .serializers import ProductesSerializer, CatalegSerializer
 # Create your views here.
 
 @api_view()
-def hello_world(request):
-    return Response({"message": "Hello world!"})
+def api_cataleg (request):
+    return Response({"message": "Benvingut a la API CATALEG"})
 
 
 
@@ -71,3 +71,34 @@ def elimina_producte(request,pk):
     producte = Productes.objects.get(id=pk)
     producte.delete()
     return Response("Producte eliminat")
+
+# G E T  D E  C A T A L E G
+
+@api_view()
+def veure_cataleg(request):
+    cataleg= Cataleg.objects.all()
+
+    cataleg_json = ProductesSerializer(cataleg, many=True)
+
+    return Response(cataleg_json.data)
+
+# C R E A T E  D E  C A T A L E G
+
+@api_view(['POST'])
+def afegeix_producte_cataleg(request):
+    #Obtenim la id del producte per veure si existeix
+    producte = request.data.get("producte_id")
+
+    if not Productes.objects.filter(id=producte):
+        return Response("No existeix el producte que vols afegir")
+
+    cataleg_item = CatalegSerializer(data=request.data)
+    if Cataleg.objects.filter(**request.data).exists():
+        raise serializers.ValidationError('Ja existeix aquest producte en aquest catàleg')
+
+    if cataleg_item.is_valid():
+        cataleg_item.save()
+        return Response(cataleg_item.data)
+    else:
+        return Response("Ha fallat")
+
