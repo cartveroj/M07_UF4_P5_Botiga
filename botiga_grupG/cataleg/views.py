@@ -63,3 +63,11 @@ def actualitza_producte(request,pk):
     else:
         return Response("No s'ha pogut actualitzar")
 
+
+# D E L E T E  D E  P R O D U C T E
+
+@api_view(['DELETE'])
+def elimina_producte(request,pk):
+    producte = Productes.objects.get(id=pk)
+    producte.delete()
+    return Response("Producte eliminat")
