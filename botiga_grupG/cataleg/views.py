@@ -12,6 +12,30 @@ def hello_world(request):
     return Response({"message": "Hello world!"})
 
 
+
+# G E T  P R O D U C T E S
+
+@api_view()
+def veure_productes(request):
+    productes = Productes.objects.all()
+
+    productes_json = ProductesSerializer(productes,many=True)
+
+    return Response(productes_json.data)
+
+# G E T  P R O D U C T E
+
+@api_view()
+def veure_producte(request,pk):
+    productes = Productes.objects.get(id = pk)
+    productes_json = ProductesSerializer(productes,many=False)
+
+    return Response(productes_json.data)
+
+
+
+
+# C R E A T E  D E  P R O D U C T E S
 @api_view(['POST'])
 def afegir_producte(request):
     producte = ProductesSerializer(data = request.data)
@@ -24,3 +48,18 @@ def afegir_producte(request):
         return Response(producte.data)
     else:
         return Response("Ha fallat")
+
+
+# U P D A T E  D E  P R O D U C T E S
+
+@api_view(['POST'])
+def actualitza_producte(request,pk):
+    producte = Productes.objects.get(id=pk)
+    serializer = ProductesSerializer(instance=producte, data = request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        return Response("No s'ha pogut actualitzar")
+
