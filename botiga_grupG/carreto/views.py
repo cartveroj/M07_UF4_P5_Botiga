@@ -24,32 +24,79 @@ def read_carreto(request):
     serializer = CarretoSerializer(queryset, many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def get_productos_by_carrito(request):
+   
+    carritos = Carreto.objects.all()
+    carritos_con_productos = []
+
+    for carrito in carritos:
+        productos_en_carrito = ProductoEnCarreto.objects.filter(id_carreto=carrito)
+        serializer_productos = ProductoEnCarretoSerializer(productos_en_carrito, many=True)
+        
+        carrito_data = {
+            'carrito': CarretoSerializer(carrito).data,
+            'productos': serializer_productos.data
+        }
+        carritos_con_productos.append(carrito_data)
+
+    return Response(carritos_con_productos)
+
 @api_view(['POST'])
-def add_carreto(request):
+def add_productos_al_carreto(request):
     if request.method == 'POST':
         producto_id = request.data.get('id_producto')
         cantidad = request.data.get('cantidad')
         metodo = request.data.get('metodo_pago')
-        
-        #de momento solo usuario 1
-        usuario = Usuari.objects.get(pk=2)
-        carrito,created = Carreto.objects.get_or_create(id_user=usuario ,fecha_creacion = date.today())
-        firstCarrito = Carreto.objects.first()
+        carrito_id = request.data.get('id_carreto')
+        #de momento solo usuario 2
+        #usuario = Usuari.objects.get(pk=2)
 
-        productoRec = Productes.objects.get(pk=producto_id)
-        ProductoCarreto = ProductoEnCarreto.objects.create(
-            id_producto = productoRec.id,
-            id_carreto = firstCarrito.id, 
-            cantidad = int(cantidad),
-            importe = (cantidad * productoRec.preu),
-            metodo_pago = metodo
+ 
+        carrito = Carreto.objects.get(pk=carrito_id)
+        # except Carreto.DoesNotExist:
+        #     carrito = Carreto.objects.create(id_user=usuario, fecha_creacion=date.today())
+       
+        # Verifica si el producto ya está en el carrito
+        producto_en_carrito, created = ProductoEnCarreto.objects.get_or_create(
+            id_carreto_id=carrito_id,
+            id_producto_id=producto_id,
+            defaults={
+                'cantidad': int(cantidad),
+                'metodo_pago': metodo
+            }
         )
-        ProductoCarreto.save()
-        serializer = ProductoEnCarretoSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
+
+        if not created:
+            # Si el producto ya está en el carrito, actualiza la cantidad
+            producto_en_carrito.cantidad += int(cantidad)
+            producto_en_carrito.save()
+        
+        # Actualiza el total del carrito
+        importe = int(cantidad) * Productes.objects.get(pk=producto_id).preu
+        carrito.total += importe
+        carrito.save()
+        
+        serializer = ProductoEnCarretoSerializer(producto_en_carrito)
+        return Response(serializer.data, status=200 if not created else 201)
+            
+@api_view(['POST'])
+def eliminarProductoCarreto(request):
+    producto_id = request.data.get('id_producto')
+    carreto_id = request.data.get('id_carreto')
+
+    productos_en_carrito = ProductoEnCarreto.objects.filter(id_carreto_id= carreto_id, id_producto_id=producto_id).first()
+    if productos_en_carrito:
+       importe = productos_en_carrito.cantidad *  Productes.objects.get(pk=producto_id).preu
+       carrito = Carreto.objects.get(pk=carreto_id)
+       carrito.total -= importe
+       carrito.save()
+
+       productos_en_carrito.delete()
+
+       return Response({'message': 'Producto eliminado del carrito.'}, status=200)
+    else:
+        return Response({'error': 'Producto no encontrado en el carrito.'}, status=404)
     
 
 @api_view(['PUT'])
