@@ -76,29 +76,29 @@ def elimina_producte(request,pk):
 
 @api_view()
 def veure_cataleg(request):
-    cataleg= Cataleg.objects.all()
+    cataleg = Cataleg.objects.all()
+    cataleg_serializer = CatalegSerializer(cataleg, many=True, context={'request': request})
+    return Response(cataleg_serializer.data)
 
-    cataleg_json = ProductesSerializer(cataleg, many=True)
-
-    return Response(cataleg_json.data)
 
 # C R E A T E  D E  C A T A L E G
 
 @api_view(['POST'])
 def afegeix_producte_cataleg(request):
-    #Obtenim la id del producte per veure si existeix
-    producte = request.data.get("producte_id")
 
-    if not Productes.objects.filter(id=producte):
-        return Response("No existeix el producte que vols afegir")
+    producte_id = request.data.get('producte_id') #Obtenim la id del producte del body de la solicitut que fem
 
-    cataleg_item = CatalegSerializer(data=request.data)
-    if Cataleg.objects.filter(**request.data).exists():
-        raise serializers.ValidationError('Ja existeix aquest producte en aquest catàleg')
 
-    if cataleg_item.is_valid():
-        cataleg_item.save()
-        return Response(cataleg_item.data)
-    else:
-        return Response("Ha fallat")
+    producte = Productes.objects.get(id=producte_id) #Busca el producte amb la id proporcionada
+    if not producte :
+        return Response("No existeix el producte amb aquesta id")
 
+    cataleg_amb_id = Cataleg.objects.filter(producte_id = producte_id).first()
+    if  cataleg_amb_id:
+        return Response("Ja existeix un cataleg amb aquesta id")
+    else :
+        cataleg = Cataleg(producte=producte) #Crea una instància nova de Catàleg amb el producte
+        cataleg.save()
+
+        serializer = CatalegSerializer(cataleg) #Obtenim la instancia del cataleg amb el producte afegit ja serialitzat
+        return Response(serializer.data)
