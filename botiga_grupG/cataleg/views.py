@@ -28,7 +28,7 @@ def veure_productes(request):
 @api_view()
 def veure_producte(request,pk):
     productes = Productes.objects.get(id = pk)
-    productes_json = ProductesSerializer(productes,many=False)
+    productes_json = ProductesSerializer(productes,many=False)#El many determina que hi haurà més d'un resultat
 
     return Response(productes_json.data)
 
@@ -77,7 +77,7 @@ def elimina_producte(request,pk):
 @api_view()
 def veure_cataleg(request):
     cataleg = Cataleg.objects.all()
-    cataleg_serializer = CatalegSerializer(cataleg, many=True, context={'request': request})
+    cataleg_serializer = CatalegSerializer(cataleg, many=True, context={'request': request})#El many determina que hi haurà més d'un resultat
     return Response(cataleg_serializer.data)
 
 
