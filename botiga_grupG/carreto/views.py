@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Carreto
 from cataleg.models import Productes
-from pagaments.models import Usuari
+from django.shortcuts import get_object_or_404
 
 from .models import ProductoEnCarreto
 from .serializers import CarretoSerializer, ProductoEnCarretoSerializer
@@ -13,10 +13,7 @@ from rest_framework import status
 
 # Create your views here.
 
-@api_view()
-def hello_world(request):
-    return Response({"message": "Hello, world!"})
-
+##END POINTS DE CARRETOS
 
 @api_view(['GET'])
 def read_carreto(request):
@@ -24,9 +21,31 @@ def read_carreto(request):
     serializer = CarretoSerializer(queryset, many=True)
     return Response(serializer.data)
 
+@api_view(['POST'])
+def add_carreto(request):
+    serializer = CarretoSerializer(data=request.data, context={'request': request})
+    if serializer.is_valid():
+        carrito = serializer.save()
+        return Response(serializer.data,status=200)
+    else:
+        return Response(status=400)
+    
+@api_view(['DELETE'])
+def delete_carreto(request,pk):
+    carrito = get_object_or_404(Carreto, pk=pk)
+    carrito.delete()
+    return Response({"message": "Carrito eliminado correctamente"}, status=200)
+
+# @api_view(['PUT'])
+# def update_carreto(request,pk):
+#     carrito = get_object_or_404(Carreto, pk=pk)
+#     carrito.delete()
+#     return Response({"message": "Carrito eliminado correctamente"}, status=200)        
+
+#END POINTS DE PRODUCTOS EN CARRETO
+
 @api_view(['GET'])
 def get_productos_by_carrito(request):
-   
     carritos = Carreto.objects.all()
     carritos_con_productos = []
 
@@ -35,7 +54,7 @@ def get_productos_by_carrito(request):
         serializer_productos = ProductoEnCarretoSerializer(productos_en_carrito, many=True)
         
         carrito_data = {
-            'carrito': CarretoSerializer(carrito).data,
+            'carreto': CarretoSerializer(carrito).data,
             'productos': serializer_productos.data
         }
         carritos_con_productos.append(carrito_data)
@@ -47,12 +66,10 @@ def add_productos_al_carreto(request):
     if request.method == 'POST':
         producto_id = request.data.get('id_producto')
         cantidad = request.data.get('cantidad')
-        metodo = request.data.get('metodo_pago')
         carrito_id = request.data.get('id_carreto')
         #de momento solo usuario 2
         #usuario = Usuari.objects.get(pk=2)
 
- 
         carrito = Carreto.objects.get(pk=carrito_id)
         # except Carreto.DoesNotExist:
         #     carrito = Carreto.objects.create(id_user=usuario, fecha_creacion=date.today())
@@ -63,7 +80,6 @@ def add_productos_al_carreto(request):
             id_producto_id=producto_id,
             defaults={
                 'cantidad': int(cantidad),
-                'metodo_pago': metodo
             }
         )
 
@@ -81,7 +97,7 @@ def add_productos_al_carreto(request):
         return Response(serializer.data, status=200 if not created else 201)
             
 @api_view(['POST'])
-def eliminarProductoCarreto(request):
+def eliminar_productos_carreto(request):
     producto_id = request.data.get('id_producto')
     carreto_id = request.data.get('id_carreto')
 
@@ -100,16 +116,26 @@ def eliminarProductoCarreto(request):
     
 
 @api_view(['PUT'])
-def update_carreto(request, pk):
-    try:
-        carrito = Carreto.objects.get(pk=pk)
-    except Carreto.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    
+def update_producto_carreto(request):
+    producto_id =  request.data.get('id_producto')
+    carreto_id = request.data.get('id_carreto')
     nueva_cantidad = request.data.get('nueva_cantidad')
-    carrito.cantidad = nueva_cantidad
+
+    try:
+        productos_en_carrito = ProductoEnCarreto.objects.filter(id_carreto_id= carreto_id, id_producto_id=producto_id).first()
+    except ProductoEnCarreto.DoesNotExist:
+        return Response({'error': 'Producto no encontrado en el carrito.'}, status=404)
+    
+    productos_en_carrito.cantidad = nueva_cantidad
+    productos_en_carrito.save()
+
+    # Recalcular el importe total del carrito
+    importe = productos_en_carrito.cantidad *  Productes.objects.get(pk=producto_id).preu
+    carrito = Carreto.objects.get(pk=carreto_id)
+    carrito.total = importe
     carrito.save()
 
-    serializer = CarretoSerializer(carrito)
-    return Response(serializer.data)
+    serializer = ProductoEnCarretoSerializer(productos_en_carrito)
+    return Response(serializer.data, status=200)
+   
 
