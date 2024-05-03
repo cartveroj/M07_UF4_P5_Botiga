@@ -102,3 +102,12 @@ def afegeix_producte_cataleg(request):
 
         serializer = CatalegSerializer(cataleg) #Obtenim la instancia del cataleg amb el producte afegit ja serialitzat
         return Response(serializer.data)
+
+# D E L E T E  D E  C A T A L E G
+
+@api_view(['DELETE'])
+def elimina_producte_cataleg(request,pk):
+    producte_cataleg = Cataleg.objects.get(id=pk)
+    producte_cataleg.delete()
+    return Response("Eliminat producte del catàleg")
+

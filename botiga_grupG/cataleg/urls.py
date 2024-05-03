@@ -13,4 +13,5 @@ urlpatterns = [
     #URLS CRUD CATALEG
     path('veureCataleg/', views.veure_cataleg, name='veureCataleg'),
     path('afegeixCataleg/', views.afegeix_producte_cataleg, name='afegeixCataleg'),
+    path('eliminaProducteCataleg/<str:pk>/', views.elimina_producte_cataleg, name='eliminaProducteCataleg')
 ]
