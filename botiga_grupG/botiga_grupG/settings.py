@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'carreto.apps.CarretoConfig',
-    'comandes.apps.ComandesConfig',
+    'cataleg.apps.CatalegConfig',
+    'pagaments.apps.PagamentsConfig',
 ]
 
 MIDDLEWARE = [

@@ -20,9 +20,11 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 
+from django.urls import path, include
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('admin/', admin.site.urls),
+  #  path('', include(router.urls)),
+  #  path('admin/', admin.site.urls),
     path('carreto/', include('carreto.urls')),
+    path('cataleg/', include('cataleg.urls'))
 ]
