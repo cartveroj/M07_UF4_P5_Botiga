@@ -3,7 +3,6 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework import viewsets
 
 
 from .models import Carreto
@@ -12,6 +11,7 @@ from django.shortcuts import get_object_or_404
 
 from .models import ProductoEnCarreto
 from .serializers import CarretoSerializer, ProductoEnCarretoSerializer
+from comandes.models import Comandes, CarretoEnComanda
 from rest_framework import status
 
 
@@ -68,6 +68,9 @@ def get_productos_by_carrito(request):
 @api_view(['POST'])
 def add_productos_al_carreto(request):
     if request.method == 'POST':
+        #recuperamos la comanda si existe o sino la creamos
+        comanda, _ = Comandes.objects.get_or_create()
+
         producto_id = request.data.get('id_producto')
         cantidad = request.data.get('cantidad')
         carrito_id = request.data.get('id_carreto')
@@ -96,7 +99,9 @@ def add_productos_al_carreto(request):
         importe = int(cantidad) * Productes.objects.get(pk=producto_id).preu
         carrito.total += importe
         carrito.save()
-        
+        #añadimos en la tabla carritoEnComanda 
+        CarretoEnComanda.objects.create(comanda=comanda, carreto=carrito)
+
         serializer = ProductoEnCarretoSerializer(producto_en_carrito)
         return Response(serializer.data, status=200 if not created else 201)
             
