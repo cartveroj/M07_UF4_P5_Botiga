@@ -4,7 +4,7 @@ from rest_framework import serializers
 class PagamentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Pagaments
-        fields = ['num_tarjeta','ccv','caducitat']
+        fields = ['carreto_id','metodo_pago']
 
 class UsuariSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
