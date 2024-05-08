@@ -1,10 +1,16 @@
 from django.urls import path, include
 from . import views
-from rest_framework.routers import DefaultRouter
 
 urlpatterns = [
     #rutas de los endpoints
-    # path('', views.hello_world, name='hello'),
-     path('addCarreto/', views.add_carreto, name='addCarreto'),
-     path('', views.read_carreto, name='readCarreto')
- ]
+   # Urls de carretos con productos
+    path('addProductosCarreto/', views.add_productos_al_carreto, name='addProductosCarreto'),
+    path('readProductosCarreto/', views.get_productos_by_carrito, name='readProductosCarreto'),
+    path('deleteProductosCarreto/', views.eliminar_productos_carreto, name='deleteProductosCarreto'),
+    path('updateProductosCarreto/', views.update_producto_carreto , name='updateProductosCarreto'),
+    # Urls de carretos
+    path('', views.read_carreto, name='readCarreto'),
+    path('addCarreto/', views.add_carreto, name='addCarreto'),
+    path('deleteCarreto/<str:pk>/', views.delete_carreto, name='deleteCarreto'),
+
+]
