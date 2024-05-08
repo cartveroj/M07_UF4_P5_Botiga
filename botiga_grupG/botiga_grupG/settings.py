@@ -38,17 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-<<<<<<< HEAD
-    'carreto.apps.CarretoConfig',
-    'cataleg.apps.CatalegConfig',
-    'pagaments.apps.PagamentsConfig',
-    'comandes.apps.ComandesConfig'
-=======
     'cataleg.apps.CatalegConfig',
     'carreto.apps.CarretoConfig',
     'comandes.apps.ComandesConfig',
     'pagaments.apps.PagamentsConfig',
->>>>>>> origin/pagaments
 ]
 
 MIDDLEWARE = [
@@ -86,7 +79,6 @@ WSGI_APPLICATION = 'botiga_grupG.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-<<<<<<< HEAD
      'default': {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "botiga_UF5",
@@ -94,15 +86,6 @@ DATABASES = {
         "PASSWORD": "pirineus",
         "HOST": "127.0.0.1",
         "PORT": "5432",
-=======
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ITIC_DB',
-        'USER': 'gemma',
-        'PASSWORD': 'system',
-        'HOST': 'localhost',
-        'PORT': '5432',
->>>>>>> origin/pagaments
     }
 }
 
