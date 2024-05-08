@@ -21,5 +21,6 @@ urlpatterns = [
   #  path('', include(router.urls)),
   #  path('admin/', admin.site.urls),
     path('carreto/', include('carreto.urls')),
-    path('cataleg/', include('cataleg.urls'))
+    path('cataleg/', include('cataleg.urls')),
+    path('comandes/', include('comandes.urls')),
 ]

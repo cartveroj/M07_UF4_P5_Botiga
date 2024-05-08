@@ -2,12 +2,16 @@ from datetime import date, timezone
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import status
+
+
 from .models import Carreto
 from cataleg.models import Productes
 from django.shortcuts import get_object_or_404
 
 from .models import ProductoEnCarreto
 from .serializers import CarretoSerializer, ProductoEnCarretoSerializer
+from comandes.models import Comandes, CarretoEnComanda
 from rest_framework import status
 
 
@@ -29,7 +33,7 @@ def add_carreto(request):
         return Response(serializer.data,status=200)
     else:
         return Response(status=400)
-
+    
 @api_view(['DELETE'])
 def delete_carreto(request,pk):
     carrito = get_object_or_404(Carreto, pk=pk)
@@ -40,7 +44,7 @@ def delete_carreto(request,pk):
 # def update_carreto(request,pk):
 #     carrito = get_object_or_404(Carreto, pk=pk)
 #     carrito.delete()
-#     return Response({"message": "Carrito eliminado correctamente"}, status=200)
+#     return Response({"message": "Carrito eliminado correctamente"}, status=200)        
 
 #END POINTS DE PRODUCTOS EN CARRETO
 
@@ -52,7 +56,7 @@ def get_productos_by_carrito(request):
     for carrito in carritos:
         productos_en_carrito = ProductoEnCarreto.objects.filter(id_carreto=carrito)
         serializer_productos = ProductoEnCarretoSerializer(productos_en_carrito, many=True)
-
+        
         carrito_data = {
             'carreto': CarretoSerializer(carrito).data,
             'productos': serializer_productos.data
@@ -64,6 +68,9 @@ def get_productos_by_carrito(request):
 @api_view(['POST'])
 def add_productos_al_carreto(request):
     if request.method == 'POST':
+        #recuperamos la comanda si existe o sino la creamos
+        comanda, _ = Comandes.objects.get_or_create()
+
         producto_id = request.data.get('id_producto')
         cantidad = request.data.get('cantidad')
         carrito_id = request.data.get('id_carreto')
@@ -73,7 +80,7 @@ def add_productos_al_carreto(request):
         carrito = Carreto.objects.get(pk=carrito_id)
         # except Carreto.DoesNotExist:
         #     carrito = Carreto.objects.create(id_user=usuario, fecha_creacion=date.today())
-
+       
         # Verifica si el producto ya está en el carrito
         producto_en_carrito, created = ProductoEnCarreto.objects.get_or_create(
             id_carreto_id=carrito_id,
@@ -87,15 +94,17 @@ def add_productos_al_carreto(request):
             # Si el producto ya está en el carrito, actualiza la cantidad
             producto_en_carrito.cantidad += int(cantidad)
             producto_en_carrito.save()
-
+        
         # Actualiza el total del carrito
         importe = int(cantidad) * Productes.objects.get(pk=producto_id).preu
         carrito.total += importe
         carrito.save()
+        #añadimos en la tabla carritoEnComanda 
+        CarretoEnComanda.objects.create(comanda=comanda, carreto=carrito)
 
         serializer = ProductoEnCarretoSerializer(producto_en_carrito)
         return Response(serializer.data, status=200 if not created else 201)
-
+            
 @api_view(['POST'])
 def eliminar_productos_carreto(request):
     producto_id = request.data.get('id_producto')
@@ -113,7 +122,7 @@ def eliminar_productos_carreto(request):
        return Response({'message': 'Producto eliminado del carrito.'}, status=200)
     else:
         return Response({'error': 'Producto no encontrado en el carrito.'}, status=404)
-
+    
 
 @api_view(['PUT'])
 def update_producto_carreto(request):
@@ -125,7 +134,7 @@ def update_producto_carreto(request):
         productos_en_carrito = ProductoEnCarreto.objects.filter(id_carreto_id= carreto_id, id_producto_id=producto_id).first()
     except ProductoEnCarreto.DoesNotExist:
         return Response({'error': 'Producto no encontrado en el carrito.'}, status=404)
-
+    
     productos_en_carrito.cantidad = nueva_cantidad
     productos_en_carrito.save()
 
@@ -137,5 +146,5 @@ def update_producto_carreto(request):
 
     serializer = ProductoEnCarretoSerializer(productos_en_carrito)
     return Response(serializer.data, status=200)
-
+   
 
