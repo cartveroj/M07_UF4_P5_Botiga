@@ -2,7 +2,8 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    #rutas de los endpoints
+   #rutas de los endpoints
+
    # Urls de carretos con productos
     path('addProductosCarreto/', views.add_productos_al_carreto, name='addProductosCarreto'),
     path('readProductosCarreto/', views.get_productos_by_carrito, name='readProductosCarreto'),

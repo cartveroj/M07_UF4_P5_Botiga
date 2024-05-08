@@ -9,9 +9,4 @@ class CatalegSerializer(serializers.HyperlinkedModelSerializer):
 class ProductesSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Productes
-        fields = ['id','nom_producte','preu','origen','pes_kg','stock','tipus']
-
-class ProductesCarretoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Productes
-        fields = ['nom_producte','preu']
+        fields = ['id','nom_producte','preu','origen','pes_kg','stock','tipus_producte']
