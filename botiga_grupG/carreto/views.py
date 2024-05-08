@@ -50,7 +50,7 @@ def delete_carreto(request,pk):
 
 @api_view(['GET'])
 def get_productos_by_carrito(request):
-    carritos = Carreto.objects.all()
+    carritos = Carreto.objects.filter(pagado=False)
     carritos_con_productos = []
 
     for carrito in carritos:
@@ -74,12 +74,8 @@ def add_productos_al_carreto(request):
         producto_id = request.data.get('id_producto')
         cantidad = request.data.get('cantidad')
         carrito_id = request.data.get('id_carreto')
-        #de momento solo usuario 2
-        #usuario = Usuari.objects.get(pk=2)
 
         carrito = Carreto.objects.get(pk=carrito_id)
-        # except Carreto.DoesNotExist:
-        #     carrito = Carreto.objects.create(id_user=usuario, fecha_creacion=date.today())
        
         # Verifica si el producto ya está en el carrito
         producto_en_carrito, created = ProductoEnCarreto.objects.get_or_create(

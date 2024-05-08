@@ -11,4 +11,4 @@ class Comandes(models.Model):
 
 class CarretoEnComanda(models.Model):
     comanda = models.ForeignKey(Comandes, on_delete=models.CASCADE, default=None,null=True)
-    carreto = models.OneToOneField(Carreto, on_delete=models.CASCADE,default=None, null=True)
+    carreto = models.ForeignKey(Carreto, on_delete=models.CASCADE,default=None, null=True)
