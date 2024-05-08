@@ -1,12 +1,12 @@
 from django.db import models
+from carreto.models import Carreto
 
 # Create your models here.
 class Pagaments (models.Model):
-    num_tarjeta = models.CharField(max_length=50)
-    ccv = models.CharField(max_length=3)
-    caducitat = models.DateTimeField()
-
-class Usuari (models.Model):
-    nom_usuari = models.CharField(max_length=50)
-    contrassenya = models.CharField(max_length=50)
-    id_tarjeta = models.ForeignKey(Pagaments,on_delete=models.CASCADE)
+    tipo_pago = [
+        ("paypal", "paypal"),
+        ("tarjeta", "tarjeta"),
+        ("transferencia", "transferencia")
+    ]
+    metodo_pago = models.CharField(max_length=30, choices=tipo_pago, default="tarjeta")
+    carreto = models.ForeignKey(Carreto,on_delete=models.CASCADE, default=None)

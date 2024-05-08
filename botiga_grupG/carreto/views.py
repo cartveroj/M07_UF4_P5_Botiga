@@ -3,12 +3,9 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-
-
 from .models import Carreto
 from cataleg.models import Productes
 from django.shortcuts import get_object_or_404
-
 from .models import ProductoEnCarreto
 from .serializers import CarretoSerializer, ProductoEnCarretoSerializer
 from comandes.models import Comandes, CarretoEnComanda
