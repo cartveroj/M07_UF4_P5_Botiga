@@ -12,7 +12,7 @@ class CarretoSerializer(serializers.ModelSerializer):
     class Meta:
         
         model = Carreto
-        fields = ['id','id_user', 'fecha_creacion','total','pagado','metodo_pago']
+        fields = ['id','id_user', 'fecha_creacion','total','pagado']
 
 
 
