@@ -5,12 +5,10 @@ from django.utils import timezone
 # Create your models here.
 
 class Carreto (models.Model):
-
     fecha_creacion = models.DateTimeField(default=timezone.now)
     productos = models.ManyToManyField(Productes, through='ProductoEnCarreto')
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     pagado = models.BooleanField(default=False)
-
 
 class ProductoEnCarreto(models.Model):
     id_carreto = models.ForeignKey(Carreto, on_delete=models.CASCADE)
