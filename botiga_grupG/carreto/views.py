@@ -97,7 +97,8 @@ def add_productos_al_carreto(request):
         carrito.total += importe
         carrito.save()
         #añadimos en la tabla carritoEnComanda 
-        CarretoEnComanda.objects.create(comanda=comanda, carreto=carrito)
+        if not CarretoEnComanda.objects.filter(comanda = comanda,carreto_id=carrito_id).exists():
+           CarretoEnComanda.objects.create(comanda=comanda, carreto=carrito)
 
         serializer = ProductoEnCarretoSerializer(producto_en_carrito)
         return Response(serializer.data, status=200 if not created else 201)

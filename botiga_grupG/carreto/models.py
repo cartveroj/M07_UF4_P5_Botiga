@@ -18,5 +18,3 @@ class ProductoEnCarreto(models.Model):
     cantidad = models.IntegerField()
     
 
-def calcular_importe(self):
-    return self.cantidad * self.id_producto.preu

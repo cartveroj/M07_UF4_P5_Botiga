@@ -43,14 +43,14 @@ def get_carritos_by_comanda(request):
     # Eliminar los registros de CarretoEnComanda en una transacción
     with transaction.atomic():
         carritos_sin_productos.delete()
-    
+
     serializer_carritos_en_comanda = CarretoEnComandesSerializer(carritos_en_comanda, many=True)
     serializer_comanda = ComandesSerializer(comanda)
     comanda_data = {
-          'comanda': serializer_comanda.data,
-          'carritos': serializer_carritos_en_comanda.data,
+        'comanda': serializer_comanda.data,
+        'carritos': serializer_carritos_en_comanda.data,
     }
-     
+    
     return Response(comanda_data)
 
 @api_view(['GET'])
