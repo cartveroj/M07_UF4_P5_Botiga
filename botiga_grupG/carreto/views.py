@@ -97,10 +97,10 @@ def add_productos_al_carreto(request):
         serializer = ProductoEnCarretoSerializer(producto_en_carrito)
         return Response(serializer.data, status=200 if not created else 201)
             
-@api_view(['POST'])
-def eliminar_productos_carreto(request):
-    producto_id = request.data.get('id_producto')
-    carreto_id = request.data.get('id_carreto')
+@api_view(['DELETE'])
+def eliminar_productos_carreto(request, carreto_id, producto_id):
+    # producto_id = request.data.get('id_producto')
+    # carreto_id = request.data.get('id_carreto')
 
     productos_en_carrito = ProductoEnCarreto.objects.filter(id_carreto_id= carreto_id, id_producto_id=producto_id).first()
     if productos_en_carrito:
@@ -117,7 +117,7 @@ def eliminar_productos_carreto(request):
     
 
 @api_view(['PUT'])
-def update_producto_carreto(request):
+def update_cantidad_producto_carreto(request):
     producto_id =  request.data.get('id_producto')
     carreto_id = request.data.get('id_carreto')
     nueva_cantidad = request.data.get('nueva_cantidad')
