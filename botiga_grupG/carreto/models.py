@@ -15,4 +15,3 @@ class ProductoEnCarreto(models.Model):
     id_producto = models.ForeignKey(Productes, on_delete=models.CASCADE)
     cantidad = models.IntegerField()
     
-
