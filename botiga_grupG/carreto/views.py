@@ -24,7 +24,7 @@ def read_carreto(request):
 def add_carreto(request):
     serializer = CarretoSerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
-        carrito = serializer.save()
+        serializer.save()
         return Response(serializer.data,status=200)
     else:
         return Response(status=400)
@@ -35,11 +35,7 @@ def delete_carreto(request,pk):
     carrito.delete()
     return Response({"message": "Carrito eliminado correctamente"}, status=200)
 
-# @api_view(['PUT'])
-# def update_carreto(request,pk):
-#     carrito = get_object_or_404(Carreto, pk=pk)
-#     carrito.delete()
-#     return Response({"message": "Carrito eliminado correctamente"}, status=200)        
+    
 
 #END POINTS DE PRODUCTOS EN CARRETO
 
@@ -99,10 +95,9 @@ def add_productos_al_carreto(request):
             
 @api_view(['DELETE'])
 def eliminar_productos_carreto(request, carreto_id, producto_id):
-    # producto_id = request.data.get('id_producto')
-    # carreto_id = request.data.get('id_carreto')
 
     productos_en_carrito = ProductoEnCarreto.objects.filter(id_carreto_id= carreto_id, id_producto_id=producto_id).first()
+    
     if productos_en_carrito:
        importe = productos_en_carrito.cantidad *  Productes.objects.get(pk=producto_id).preu
        carrito = Carreto.objects.get(pk=carreto_id)
@@ -122,21 +117,28 @@ def update_cantidad_producto_carreto(request):
     carreto_id = request.data.get('id_carreto')
     nueva_cantidad = request.data.get('nueva_cantidad')
 
+    #Verificamos que este en el carrito
     try:
-        productos_en_carrito = ProductoEnCarreto.objects.filter(id_carreto_id= carreto_id, id_producto_id=producto_id).first()
+        producto_en_carrito = ProductoEnCarreto.objects.get(id_carreto_id=carreto_id, id_producto_id=producto_id)
     except ProductoEnCarreto.DoesNotExist:
         return Response({'error': 'Producto no encontrado en el carrito.'}, status=404)
     
-    productos_en_carrito.cantidad = nueva_cantidad
-    productos_en_carrito.save()
+    producto_en_carrito.cantidad = nueva_cantidad
+    producto_en_carrito.save()
 
-    # Recalcular el importe total del carrito
-    importe = productos_en_carrito.cantidad *  Productes.objects.get(pk=producto_id).preu
+    # Obtener todos los productos en el carrito
+    productos_en_carrito = ProductoEnCarreto.objects.filter(id_carreto_id=carreto_id)
+
+    # Recalcular el importe total del carrito y si tiene mas productos
+    importe_total = 0
+    for producto_en_carrito in productos_en_carrito:
+        importe_total += producto_en_carrito.cantidad * producto_en_carrito.id_producto.preu
+
     carrito = Carreto.objects.get(pk=carreto_id)
-    carrito.total = importe
+    carrito.total = importe_total
     carrito.save()
 
-    serializer = ProductoEnCarretoSerializer(productos_en_carrito)
+    serializer = ProductoEnCarretoSerializer(producto_en_carrito)
     return Response(serializer.data, status=200)
    
 
