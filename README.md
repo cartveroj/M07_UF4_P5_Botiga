@@ -41,3 +41,17 @@ Conté el model de Catàleg i Productes juntament amb els seus serializers per a
 
 ![eliminar_producte_cataleg](imatges/delete_producte_cataleg.png)
 ![eliminat_producte_cataleg](imatges/producte_cataleg_eliminat.png)
+
+
+<h2> API PAGAMENTS </h2>
+
+Conté el model de Pagaments amb la view que permet modificar el estat de Carreto en el camp pagat a True
+
+<h3> PAGAR CARRETO </h3>
+
+![carreto_pagat](imatges/carreto_pagat.png)
+![carreto_pagat_bbdd](imatges/carreto_pagat_bbdd.png)
+
+En cas de que el carreto estigui pagat mostrarà el següent missatge: 
+
+![carreto_pagat_error](imatges/control_errors_pagaments.png)
