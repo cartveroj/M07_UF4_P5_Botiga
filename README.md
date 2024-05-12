@@ -1,6 +1,8 @@
 # M07_UF4_P5_Botiga
 <h2> Model Entitat-Relació </h2>
 
+En aquest model vam partir de la idea de que hi hauria un Login i la api de Pagaments gestionaria el pagament mirant la targeta i l'usuari, al final es va decidir que Pagaments només gestionaria que el carretó sortís com a pagat.
+
 ![model](imatges/modelentitatrelacio.png)
 
 <h2>API CATALEG </h2>

@@ -6,7 +6,7 @@ from carreto.models import Carreto
 @api_view(['GET','POST'])
 def paga_carreto(request, pk):
     carreto = Carreto.objects.get(id=pk)
-    if carreto.pagado != True:
+    if carreto.pagado != True: #Controla que no sigui true el estat de pagat per tal de que si ja està pagat avisi.
         carreto.pagado = True
         carreto.save()
         return Response("Pagat")
