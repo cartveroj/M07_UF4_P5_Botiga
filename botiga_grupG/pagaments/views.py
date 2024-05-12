@@ -10,3 +10,5 @@ def paga_carreto(request, pk):
         carreto.pagado = True
         carreto.save()
         return Response("Pagat")
+    else :
+        return Response("Aquest carreto ja està pagat")
