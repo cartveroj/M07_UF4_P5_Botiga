@@ -1,0 +1,26 @@
+version: '3.1'
+services:
+  db:
+    image: postgres:13
+    container_name: iticdb
+    environment:
+      - POSTGRES_DB=ITIC_DB
+      - POSTGRES_PASSWORD=system
+      - POSTGRES_USER=gemma
+    ports:
+      - "5432:5432"
+    volumes:
+      - local_pgdata:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin5
+    ports:
+      - "89:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: gemma.garrigosa@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: gemma123
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+volumes:
+  local_pgdata:
+  pgadmin-data:
