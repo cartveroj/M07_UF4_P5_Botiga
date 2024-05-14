@@ -1,15 +1,13 @@
-from datetime import date, timezone
-from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import status
-from .models import Carreto
-from cataleg.models import Productes
 from django.shortcuts import get_object_or_404
 from .models import ProductoEnCarreto
-from .serializers import CarretoSerializer, ProductoEnCarretoSerializer
+from .models import Carreto
+from cataleg.models import Productes
 from comandes.models import Comandes, CarretoEnComanda
-from rest_framework import status
+
+from .serializers import CarretoSerializer, ProductoEnCarretoSerializer
+
 
 
 # Create your views here.
@@ -47,7 +45,7 @@ def delete_carreto(request,pk):
 
 @api_view(['GET'])
 def get_productos_by_carrito(request):
-    carritos = Carreto.objects.all()
+    carritos = Carreto.objects.filter(pagado=False)
     carritos_con_productos = []
 
     for carrito in carritos:
@@ -71,12 +69,8 @@ def add_productos_al_carreto(request):
         producto_id = request.data.get('id_producto')
         cantidad = request.data.get('cantidad')
         carrito_id = request.data.get('id_carreto')
-        #de momento solo usuario 2
-        #usuario = Usuari.objects.get(pk=2)
 
         carrito = Carreto.objects.get(pk=carrito_id)
-        # except Carreto.DoesNotExist:
-        #     carrito = Carreto.objects.create(id_user=usuario, fecha_creacion=date.today())
        
         # Verifica si el producto ya está en el carrito
         producto_en_carrito, created = ProductoEnCarreto.objects.get_or_create(
@@ -97,15 +91,16 @@ def add_productos_al_carreto(request):
         carrito.total += importe
         carrito.save()
         #añadimos en la tabla carritoEnComanda 
-        CarretoEnComanda.objects.create(comanda=comanda, carreto=carrito)
+        if not CarretoEnComanda.objects.filter(comanda = comanda,carreto_id=carrito_id).exists():
+           CarretoEnComanda.objects.create(comanda=comanda, carreto=carrito)
 
         serializer = ProductoEnCarretoSerializer(producto_en_carrito)
         return Response(serializer.data, status=200 if not created else 201)
             
-@api_view(['POST'])
-def eliminar_productos_carreto(request):
-    producto_id = request.data.get('id_producto')
-    carreto_id = request.data.get('id_carreto')
+@api_view(['DELETE'])
+def eliminar_productos_carreto(request, carreto_id, producto_id):
+    # producto_id = request.data.get('id_producto')
+    # carreto_id = request.data.get('id_carreto')
 
     productos_en_carrito = ProductoEnCarreto.objects.filter(id_carreto_id= carreto_id, id_producto_id=producto_id).first()
     if productos_en_carrito:
@@ -122,7 +117,7 @@ def eliminar_productos_carreto(request):
     
 
 @api_view(['PUT'])
-def update_producto_carreto(request):
+def update_cantidad_producto_carreto(request):
     producto_id =  request.data.get('id_producto')
     carreto_id = request.data.get('id_carreto')
     nueva_cantidad = request.data.get('nueva_cantidad')

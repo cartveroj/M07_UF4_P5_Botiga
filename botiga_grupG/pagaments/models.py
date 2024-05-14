@@ -9,4 +9,4 @@ class Pagaments (models.Model):
         ("transferencia", "transferencia")
     ]
     metodo_pago = models.CharField(max_length=30, choices=tipo_pago, default="tarjeta")
-    carreto = models.ForeignKey(Carreto,on_delete=models.CASCADE, default=None)
+    carreto = models.ForeignKey(Carreto,on_delete=models.CASCADE, default=None, null=True)
