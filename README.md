@@ -5,6 +5,10 @@ En aquest model vam partir de la idea de que hi hauria un Login i la api de Paga
 
 ![model](imatges/modelentitatrelacio.png)
 
+Aquesta es la versió final: 
+
+![modelv2](imatges/versio2bbdd.png)
+
 <h2>API CATALEG </h2>
 
 Conté el model de Catàleg i Productes juntament amb els seus serializers per a realitzar les consultes:
