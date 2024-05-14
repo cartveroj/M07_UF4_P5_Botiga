@@ -1,7 +1,7 @@
 from django.db import models
 from carreto.models import Carreto
 
-# Create your models here.
+# Degut al canvi en el fluxe de dades i el model entitat relació aquest model no entra en joc en la api, la idea era que un usuari pogués escollir el metode de pagament
 class Pagaments (models.Model):
     tipo_pago = [
         ("paypal", "paypal"),
