@@ -40,7 +40,7 @@ def veure_producte(request,pk):
 def afegir_producte(request):
     producte = ProductesSerializer(data = request.data)
 
-    if Productes.objects.filter(**request.data).exists():
+    if Productes.objects.filter(**request.data).exists(): #Mira si hi ha un producte igual
         raise serializers.ValidationError('Ja existeix aquest producte')
 
     if producte.is_valid():
@@ -55,7 +55,7 @@ def afegir_producte(request):
 @api_view(['POST'])
 def actualitza_producte(request,pk):
     producte = Productes.objects.get(id=pk)
-    serializer = ProductesSerializer(instance=producte, data = request.data)
+    serializer = ProductesSerializer(instance=producte, data = request.data) #Agafa les dades del producte
 
     if serializer.is_valid():
         serializer.save()
