@@ -2,8 +2,9 @@ from django.db import models
 from carreto.models import Carreto
 from django.utils import timezone
 
-
-# Create your models here.
+'''Archivo que con tiene los modelos de la aplicacion
+Comandas y carretoEnComando(que es cuando se tiene una carrito con productos)
+'''
 class Comandes(models.Model):
     fecha_creacion_comanda = models.DateTimeField(default=timezone.now)
     carritos = models.ManyToManyField(Carreto, through='CarretoEnComanda')
