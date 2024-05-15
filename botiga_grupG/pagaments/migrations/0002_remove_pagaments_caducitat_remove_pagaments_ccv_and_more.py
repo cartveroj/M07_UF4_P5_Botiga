@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
         ('carreto', '0009_remove_carreto_id_user'),
         ('pagaments', '0001_initial'),
     ]
-    operations = [
+  operations = [
         migrations.RemoveField(
             model_name='pagaments',
             name='caducitat',
