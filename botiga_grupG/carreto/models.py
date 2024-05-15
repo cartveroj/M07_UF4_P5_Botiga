@@ -2,7 +2,7 @@ from django.db import models
 from cataleg.models import Productes
 from django.utils import timezone
 
-# Create your models here.
+'''Archivo que contiene los modelos de la aplicacion'''
 
 class Carreto (models.Model):
     fecha_creacion = models.DateTimeField(default=timezone.now)
